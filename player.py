@@ -174,16 +174,20 @@ class KeyWorker(threading.Thread):
                 player.play(var)
                 self.adStatus = 1
                 while True:
+                    #광고를 중단하고 컨텐츠재생 후 종료하였을때 기존의 파일을 다시 재생
                     if self.adStatus == 2:
                         if self.conStatus == 0:
                             player.play(var)
                             self.adStatus = 1
                             print(var)
+                        # 컨텐츠 재생중
                         else:
                             sleep(1)
                             pass
+                    #광고 재생 종료
                     elif self.adStatus == 0:
                         break
+                    #광고 재생중
                     else:
                         sleep(1)
                         pass
@@ -194,12 +198,8 @@ class KeyWorker(threading.Thread):
         self.conStatus = 1
 
         path = 'infovideo\\'+self.msg+".mp4"
-        # content = glob.glob(path)
-        # for var in content:
-        #     player.play(var)
         player.play(path)
         print(path)
-        print(self.msg)
 
 # async def accept(websocket, path):
 #     print('accepted', websocket.origin, websocket.id)
@@ -227,9 +227,8 @@ async def echo(websocket, path):
         print(message)
         keywork.sendMedia(message)
 
-
+#ipconfig 주소
 start_server = websockets.serve(echo, "203.250.34.32", 5000)
-
 
 if "__main__" == __name__:
     player = VlcPlayer()
