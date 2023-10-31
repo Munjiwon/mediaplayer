@@ -141,6 +141,7 @@ def my_call_back(event):
     global keywork
     if keywork.conStatus == 1 :
         keywork.conStatus = 0
+
     else :
         keywork.adStatus = 0
 
@@ -218,12 +219,24 @@ class KeyWorker(threading.Thread):
 #     async with websockets.serve(accept, "localhost", 5000):
 #         await asyncio.Future()
 
+def play_infovideo(message):
+    print(f"Start to play: {message}")
+    global keywork
+    while True: #안내영상 재생이 끝날때까지 반복
+        if keywork.conStatus == 1:
+            sleep(1)
+            pass
+        else:
+            break
+    print("End Info Video")
+
 async def echo(websocket, path):
     print("start websocket")
     async for message in websocket:
-        await websocket.send(f"Server received: {message}"+"recived")
-        print(message)
+
         keywork.sendMedia(message)
+        play_infovideo(message)
+        await websocket.send("End to play")
 
 #ipconfig 주소
 start_server = websockets.serve(echo, "203.250.34.32", 5000)
