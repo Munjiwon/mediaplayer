@@ -11,9 +11,9 @@ import json
 import pickle
 import websockets  # 클라이언트 접속이 되면 호출된다.
 
-from PyQt5.QtWidgets import *
-from PyQt5.QtGui import *
-from PyQt5.QtCore import Qt, QTimer, QThread, pyqtSignal
+# from PyQt5.QtWidgets import *
+# from PyQt5.QtGui import *
+# from PyQt5.QtCore import Qt, QTimer, QThread, pyqtSignal
 
 class VlcPlayer:
     '''
