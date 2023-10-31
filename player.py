@@ -35,7 +35,7 @@ class VlcPlayer:
         # self.media.set_xwindow(os.environ.get("DISPLAY"), video_x, video_y, video_width, video_height)
 
         #풀스크린
-        #self.media.set_fullscreen(True)
+        self.media.set_fullscreen(True)
 
     def set_uri(self, mrl):
         '''
@@ -147,20 +147,6 @@ def my_call_back(event):
         keywork.adStatus = 0
 
 
-async def accept(websocket, path):
-    print('accepted', websocket.origin, websocket.id)
-    while True:
-        data = await websocket.recv()  # 클라이언트로부터 메시지를 대기한다.
-        recvdata = json.loads(data)
-        recvMsg = recvdata['message']
-
-
-        #if you receive '0' data from client once, add client socket into Advertiser client list
-        #advertise mode ready to client
-        print(data)
-
-        keywork.sendMedia(recvMsg)
-
 class KeyWorker(threading.Thread):
     def __init__(self, name):
         super().__init__()
@@ -207,17 +193,42 @@ class KeyWorker(threading.Thread):
         self.adStatus = 2
         self.conStatus = 1
 
-        path = 'C:\dev\mediaplayer\infovideo\\'+self.msg
-        content = glob.glob(path)
-        for var in content:
-            player.play(var)
+        path = 'C:\dev\mediaplayer\infovideo\\'+self.msg+".mp4"
+        # content = glob.glob(path)
+        # for var in content:
+        #     player.play(var)
+        player.play(path)
         print(path)
         print(self.msg)
 
+# async def accept(websocket, path):
+#     print('accepted', websocket.origin, websocket.id)
+#     print("Open server")
+#     while True:
+#         data = await websocket.recv()  # 클라이언트로부터 메시지를 대기한다.
+#         recvdata = json.loads(data)
+#         recvMsg = recvdata['message']
+#
+#
+#         #if you receive '0' data from client once, add client socket into Advertiser client list
+#         #advertise mode ready to client
+#         print(data)
+#
+#         keywork.sendMedia(recvMsg)
 
-async def main():
-    async with websockets.serve(accept, "localhost", 5000):
-        await asyncio.Future()
+# async def main():
+#     async with websockets.serve(accept, "localhost", 5000):
+#         await asyncio.Future()
+
+async def echo(websocket, path):
+    print("start websocket")
+    async for message in websocket:
+        await websocket.send(f"Server received: {message}"+"recived")
+        print(message)
+        keywork.sendMedia(message)
+
+
+start_server = websockets.serve(echo, "203.250.34.32", 5000)
 
 
 if "__main__" == __name__:
@@ -228,4 +239,7 @@ if "__main__" == __name__:
     keywork = KeyWorker('keyWorker')
     keywork.start()
 
-    asyncio.run(main())
+    asyncio.get_event_loop().run_until_complete(start_server)
+    asyncio.get_event_loop().run_forever()
+
+    # asyncio.run(main())
