@@ -161,7 +161,7 @@ class KeyWorker(threading.Thread):
         self.callback = callback
     def playAd(self):
         while True:
-            path = 'C:\dev\mediaplayer\infivideo'
+            path = 'infivideo'
             media_list = list()
             for path, subdirs, files in os.walk(path):
                 for name in files:
@@ -193,7 +193,7 @@ class KeyWorker(threading.Thread):
         self.adStatus = 2
         self.conStatus = 1
 
-        path = 'C:\dev\mediaplayer\infovideo\\'+self.msg+".mp4"
+        path = 'infovideo\\'+self.msg+".mp4"
         # content = glob.glob(path)
         # for var in content:
         #     player.play(var)
